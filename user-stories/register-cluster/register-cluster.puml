@@ -1,0 +1,80 @@
+@startuml register cluster
+' setup
+!theme plain
+
+' actors and participants
+actor "Infrastructure\nAdministrator" as admin
+
+box Workload Cluster
+    Participant DMS
+end box
+
+box SMO (management cluster)
+    Participant FOCOM
+end box
+
+ref over FOCOM, admin, DMS
+    Nephio user story, Register Cluster
+end ref 
+
+note over admin
+    Requirements on k8s cluster
+    dimensioning, topology and
+    homing location is known
+    and understood
+end note
+
+note over admin
+    Requirements on CRDs,
+    CNIs, CSI, NADs, etc
+    is known and understood
+end note
+
+note over admin
+    Requirements on required
+    k8s operators is known
+    and understood
+end note
+
+note over admin
+    Requirements DMS user
+    is known and understood
+end note
+
+== Use Case Start ==
+
+note over admin: Create new k8s Cluster ID
+note over admin
+    Allocate resources and mark
+    them as booked for the new
+    k8s cluster
+end note 
+note over admin, DMS
+    Create k8s cluster at required
+    homing location with required
+    dimensioning and topology
+end note
+note over admin, DMS
+    Configure required CRDs,
+    CNIs, CSI, NADs, etc
+end note
+note over admin, DMS: Create required k8s operators
+note over admin, DMS
+    Create new k8s cluster user
+    with limited user priviliges
+    and assign DMS user credentials
+end note
+
+admin -> FOCOM : Register new k8s cluster with DMS enpoint and K8s cluster ID
+
+note over FOCOM
+    Create and populate cluster
+    repository structure in git
+    repro, etc.
+end note
+
+== Use Case End ==
+
+note over FOCOM, DMS: New k8s cluster available to NFO for NF deployments, DMS endpoint and DMS user credentials available to NFO 
+
+@enduml
